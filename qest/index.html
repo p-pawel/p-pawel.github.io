@@ -1,0 +1,110 @@
+<html>
+<head>
+<style>
+.good {
+background:green;
+}
+.bad {
+background:red;
+}
+</style>
+</head>
+<body>
+<textarea id="data">
+
+</textarea>
+<button id="start">START</button>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<script>
+$(function() {
+
+
+	$("#start").click(function() {
+		$(this).hide();	
+		$("#data").hide();
+		data = JSON.parse($("#data").val());
+		next();
+	});
+
+	$("#next").click(function() {
+		next();
+	});
+
+
+	$("#check").click(function() {
+		var actual = [];
+		$("#answers input:checked").each(function(){actual.push($(this).data("no"))});
+		console.log(actual);
+		var errors = 0;
+		$("#answers input").closest("li").removeClass("good bad");
+		expected.forEach(function(val){
+			if (actual.indexOf(val)>=0) {
+				markAnswer(val, true);
+			} else {
+				markAnswer(val, false);
+				errors++;
+			}
+		});
+		actual.forEach(function(val){
+			if (expected.indexOf(val)>=0) {
+				markAnswer(val, true);
+			} else {
+				markAnswer(val, false);
+				errors++;
+			}
+		});
+		if (errors == 0) {
+			$("#next").show();
+		}
+	});
+
+
+});
+
+function markAnswer(no, state) {
+$("#answers input[data-no="+no+"]").closest("li").addClass(state ? "good" : "bad").removeClass(!state ? "good" : "bad");
+}
+
+var data; 
+var question; 
+var expected = [];
+
+
+function next() {
+	$("#next").hide();
+	$("#question").text("");
+	$("#answers").text("");
+
+	question = data.pop();
+	$("#question").text(question.question);
+	var i = 1;
+
+	expected = [];
+
+	question.answers.forEach(function(entry){
+		console.log(entry);
+		var text = entry;
+		if (text[0]==='*') {
+			expected.push(i);
+			text = text.substring(1);
+		}
+		$("#answers").append("<li><label><input type='checkbox' data-no="+i+">"+text+"</label></li>");
+		i++;
+	});
+
+};
+
+
+</script>
+
+
+
+<div id="question"></div>
+<ul id="answers"></ul>
+<button id="check">CHECK</button>
+
+<button id="next">NEXT</button>
+
+</body>
+</html>
