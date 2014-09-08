@@ -8,10 +8,15 @@ $(function() {
 
 	$("#quiz").hide();
 	$("#done").hide();
+	
+	if (localStorage.getItem("data") != null) {
+		$("#data").val(localStorage.getItem("data"));
+	}
 
 	$("#start").click(function() {
 		$(this).hide();
 		$("#data").hide();
+		localStorage.setItem("data", $("#data").val());
 		data = JSON.parse($("#data").val());
 		$("#setup").hide();
 		$("#quiz").show();
