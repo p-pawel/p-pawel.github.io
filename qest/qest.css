@@ -1,0 +1,30 @@
+ul#answers {
+	padding: 0
+}
+
+#answers li {
+	list-style: none;
+}
+
+#answers li  input[type=checkbox] {
+	display: none;
+}
+
+#container {
+	margin-top: 100px
+}
+
+#answers label {
+	display: block;
+}
+
+#question {
+	margin-top: 1em;
+	margin-bottom: 2em;
+	font-size: 20px;
+}
+
+label.selected {
+	border-width: 2px;
+	border-color: rgb(63, 63, 128);
+}
