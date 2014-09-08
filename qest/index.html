@@ -1,110 +1,40 @@
+<!doctype html>
 <html>
 <head>
-<style>
-.good {
-background:green;
-}
-.bad {
-background:red;
-}
-</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="qest.css">
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="qest.js"></script>
 </head>
 <body>
-<textarea id="data">
+	<div id="container" class="col-lg-8 col-lg-offset-2">
+		<div id="setup">
+			<textarea id="data" style="width: 100%; height: 500px">[{"question":"Qqqq qq qqqq q q qqqq qq:","answers": ["a","b","*c","d"]},{"question":"Qqqq qq qqqqqqqq qqqqqqqqqq q q qqqq qq:","answers": ["aaa","bb","*c","d"]}]</textarea>
+			<button id="start" class="btn btn-default">START</button>
+		</div>
+		<div id="quiz">
+			<div class="progress">
+				<div class="progress-bar progress-bar-info" id="progress" role="progressbar" style="width: 0%;"></div>
+			</div>
+			<div class="row">
+				<div class="well">
+					<div id="question"></div>
+					<ul id="answers"></ul>
+				</div>
+			</div>
+			<div class="row">
+				<button id="check" class="btn btn-default">CHECK</button>
+				<button id="next" class="btn btn-default">NEXT</button>
+			</div>
+		</div>
+		<div id="done">
+			<div class="well">
 
-</textarea>
-<button id="start">START</button>
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-
-<script>
-$(function() {
-
-
-	$("#start").click(function() {
-		$(this).hide();	
-		$("#data").hide();
-		data = JSON.parse($("#data").val());
-		next();
-	});
-
-	$("#next").click(function() {
-		next();
-	});
-
-
-	$("#check").click(function() {
-		var actual = [];
-		$("#answers input:checked").each(function(){actual.push($(this).data("no"))});
-		console.log(actual);
-		var errors = 0;
-		$("#answers input").closest("li").removeClass("good bad");
-		expected.forEach(function(val){
-			if (actual.indexOf(val)>=0) {
-				markAnswer(val, true);
-			} else {
-				markAnswer(val, false);
-				errors++;
-			}
-		});
-		actual.forEach(function(val){
-			if (expected.indexOf(val)>=0) {
-				markAnswer(val, true);
-			} else {
-				markAnswer(val, false);
-				errors++;
-			}
-		});
-		if (errors == 0) {
-			$("#next").show();
-		}
-	});
-
-
-});
-
-function markAnswer(no, state) {
-$("#answers input[data-no="+no+"]").closest("li").addClass(state ? "good" : "bad").removeClass(!state ? "good" : "bad");
-}
-
-var data; 
-var question; 
-var expected = [];
-
-
-function next() {
-	$("#next").hide();
-	$("#question").text("");
-	$("#answers").text("");
-
-	question = data.pop();
-	$("#question").text(question.question);
-	var i = 1;
-
-	expected = [];
-
-	question.answers.forEach(function(entry){
-		console.log(entry);
-		var text = entry;
-		if (text[0]==='*') {
-			expected.push(i);
-			text = text.substring(1);
-		}
-		$("#answers").append("<li><label><input type='checkbox' data-no="+i+">"+text+"</label></li>");
-		i++;
-	});
-
-};
-
-
-</script>
-
-
-
-<div id="question"></div>
-<ul id="answers"></ul>
-<button id="check">CHECK</button>
-
-<button id="next">NEXT</button>
-
+				<span class="glyphicon glyphicon-off"></span> END
+			</div>
+		</div>
+	</div>
 </body>
 </html>
