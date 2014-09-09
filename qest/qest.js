@@ -6,16 +6,11 @@ var questionsDone;
 
 $(function() {
 
-	$("#quiz").hide();
-	$("#done").hide();
-	
-	if (localStorage.getItem("data") != null) {
-		$("#data").val(localStorage.getItem("data"));
-	}
+	$("#restart").click(function() {
+		restart();
+	});
 
 	$("#start").click(function() {
-		$(this).hide();
-		$("#data").hide();
 		localStorage.setItem("data", $("#data").val());
 		data = JSON.parse($("#data").val());
 		$("#setup").hide();
@@ -60,6 +55,8 @@ $(function() {
 					$("#next").show();
 				}
 			});
+
+	restart();
 });
 
 function markAnswer(no, state) {
@@ -68,7 +65,15 @@ function markAnswer(no, state) {
 			!state ? "alert-success alert-info" : "alert-danger alert-info");
 }
 
+function restart() {
+	$("#setup").show();
+	$("#quiz").hide();
+	$("#done").hide();
 
+	if (localStorage.getItem("data") != null) {
+		$("#data").val(localStorage.getItem("data"));
+	}
+}
 
 function next() {
 	$("#next").hide();
@@ -76,9 +81,10 @@ function next() {
 	$("#answers").text("");
 
 	question = data.pop();
-	if (question==null) {
+	if (question == null) {
 		$("#quiz").hide();
 		$("#done").show();
+		return;
 	}
 	$("#question").html(question.question);
 	var i = 1;
@@ -100,21 +106,20 @@ function next() {
 						+ " id='answer" + i + "'>" + text + "</label></li>");
 		i++;
 	});
-	
+
 	$("li").change(function() {
 		$(this).find("label").toggleClass("selected");
 	});
-	
-	$("#progress").css("width",(100*questionsDone/questionsTotal)+"%");
-	questionsDone++;
-	
 
+	$("#progress").css("width", (100 * questionsDone / questionsTotal) + "%");
+	questionsDone++;
 
 };
 
-//+ Jonas Raoni Soares Silva
-//@ http://jsfromhell.com/array/shuffle [v1.0]
-function shuffle(o){ //v1.0
-  for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-  return o;
+// + Jonas Raoni Soares Silva
+// @ http://jsfromhell.com/array/shuffle [v1.0]
+function shuffle(o) { // v1.0
+	for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x)
+		;
+	return o;
 };
