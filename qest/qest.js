@@ -3,6 +3,9 @@ var question;
 var expected = [];
 var questionsTotal;
 var questionsDone;
+var timeStart;
+var timeEnd;
+var questionsWrongly = {};
 
 $(function() {
 
@@ -18,6 +21,7 @@ $(function() {
 		shuffle(data);
 		questionsTotal = data.length;
 		questionsDone = 0;
+		timeStart = new Date().getTime();
 		next();
 	});
 
@@ -51,8 +55,12 @@ $(function() {
 						errors++;
 					}
 				});
+				console.log(errors);
 				if (errors == 0) {
 					$("#next").show();
+				}
+				if (errors > 0) {
+					questionsWrongly[$("#question").text()] = true;
 				}
 			});
 
@@ -84,6 +92,20 @@ function next() {
 	if (question == null) {
 		$("#quiz").hide();
 		$("#done").show();
+		timeEnd = new Date().getTime();
+		var elapsedSeconds = Math.floor((timeEnd - timeStart) / 1000);
+		var elapsedMinutes = Math.floor((timeEnd - timeStart) / 60000);
+		var totalWrong = Object.keys(questionsWrongly).length;
+		$("#result").html("Time: " + elapsedMinutes + " min " + elapsedSeconds + " s");
+		$("#result").append("<br/>Good: " + (questionsTotal - totalWrong)+ " <br/>");
+		$("#result").append("Bad: " + (totalWrong) + " <br/>");
+		var percent = Math.floor(100*(questionsTotal - totalWrong)/(questionsTotal));
+		$("#result").append("Result: " + percent +"% <br/>");
+		var x = $("<ul class='list-group'></ul>");
+		$("#result").append(x);
+		Object.keys(questionsWrongly).forEach(function(q) {
+			x.append($("<li class='list-group-item'>"+q+"</li>"));
+		});
 		return;
 	}
 	$("#question").html(question.question);
@@ -123,3 +145,4 @@ function shuffle(o) { // v1.0
 		;
 	return o;
 };
+
