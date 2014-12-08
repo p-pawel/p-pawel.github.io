@@ -22,8 +22,14 @@ $(function() {
 		questionsTotal = data.length;
 		questionsDone = 0;
 		timeStart = new Date().getTime();
+		questionsWrongly = {};
 		next();
 	});
+	
+	$("#clean").click(function() {
+		localStorage.removeItem("data");
+		location.reload();
+	})
 
 	$("#next").click(function() {
 		next();
@@ -93,7 +99,7 @@ function next() {
 		$("#quiz").hide();
 		$("#done").show();
 		timeEnd = new Date().getTime();
-		var elapsedSeconds = Math.floor((timeEnd - timeStart) / 1000);
+		var elapsedSeconds = Math.floor((timeEnd - timeStart) / 1000)%60;
 		var elapsedMinutes = Math.floor((timeEnd - timeStart) / 60000);
 		var totalWrong = Object.keys(questionsWrongly).length;
 		$("#result").html("Time: " + elapsedMinutes + " min " + elapsedSeconds + " s");
@@ -101,11 +107,20 @@ function next() {
 		$("#result").append("Bad: " + (totalWrong) + " <br/>");
 		var percent = Math.floor(100*(questionsTotal - totalWrong)/(questionsTotal));
 		$("#result").append("Result: " + percent +"% <br/>");
-		var x = $("<ul class='list-group'></ul>");
-		$("#result").append(x);
+
+		var wrongs = $("<ul class='list-group'></ul>");
+//		wrongs.append($("<li class='list-group-item active'>Incorrect answers to questions:</li>"));
 		Object.keys(questionsWrongly).forEach(function(q) {
-			x.append($("<li class='list-group-item'>"+q+"</li>"));
+			wrongs.append($("<li class='list-group-item'>"+q+"</li>"));
 		});
+		
+		$("#wrongs").html(wrongs);
+		
+		if (totalWrong>0) {
+			$("#incorrects").show();
+		} else {
+			$("#incorrects").hide();
+		}
 		return;
 	}
 	$("#question").html(question.question);
